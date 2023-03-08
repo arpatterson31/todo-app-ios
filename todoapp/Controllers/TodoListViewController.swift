@@ -9,7 +9,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    var itemArray = ["laundry", "feed Rey-Rey", "complete iOS course"]
+    var itemArray = [Item]()
     
     // interface to the user's defaults database - key value pairs stored persistently across launches of the app
     let defaults = UserDefaults.standard
@@ -23,11 +23,23 @@ class TodoListViewController: UITableViewController {
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
         
+        // refactor after creating an Item class - previous todos were stored in an array
+        let newItem = Item()
+        newItem.title = "laundry"
+        itemArray.append(newItem)
+        
+        let newItem2 = Item()
+        newItem2.title = "feed rey-rey"
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "finish ios course"
+        itemArray.append(newItem3)
         
         // this goes into the the defaults object and pulls out what is in local storage if there are items and uses that on page load.
-        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
-            itemArray = items
-        }
+//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+//            itemArray = items
+//        }
     }
 
     
@@ -38,24 +50,27 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let todo = itemArray[indexPath.row]
+        let todoItem = itemArray[indexPath.row]
        
         // withIdentifier needs to be the same as the unique Identifier set in the table view cell attributes
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = todo
+        cell.textLabel?.text = todoItem.title
+        
+        // adds a checkmark on the todo item that was selected using the accessories in the attributes inspector
+        // swift ternary ->  value = condition ? valueIfTrue: valueIfFalse
+        cell.accessoryType = todoItem.done ? .checkmark : .none
+
         
         return cell
     }
     
     //MARK - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+                
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        // adds a checkmark on the todo item that was selected using the accessories in the attributes inspector
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        // reloads the table to get the checkmarks back
+        tableView.reloadData()
         
         // highlight the one selected in grey and then removes that highlight
         tableView.deselectRow(at: indexPath, animated: true)
@@ -75,7 +90,10 @@ class TodoListViewController: UITableViewController {
         // defines the action
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // what will happen once the user clicks the add item button on my ui alert
-            self.itemArray.append(textField.text!)
+            // add new item using our Item Class
+            let newItem = Item()
+            newItem.title = textField.text!
+            self.itemArray.append(newItem)
             
             // adds to the defaults object, much like local storage
             self.defaults.set(self.itemArray, forKey: "TodoListArray")
