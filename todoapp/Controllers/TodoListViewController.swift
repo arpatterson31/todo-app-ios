@@ -23,27 +23,20 @@ class TodoListViewController: UITableViewController {
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
         
-       
-        
-//        print(dataFilePath)
-        
         // refactor after creating an Item class - previous todos were stored in an array
-        let newItem = Item()
-        newItem.title = "laundry"
-        itemArray.append(newItem)
+//        let newItem = Item()
+//        newItem.title = "laundry"
+//        itemArray.append(newItem)
+//        
+//        let newItem2 = Item()
+//        newItem2.title = "feed rey-rey"
+//        itemArray.append(newItem2)
+//
+//        let newItem3 = Item()
+//        newItem3.title = "finish ios course"
+//        itemArray.append(newItem3)
         
-        let newItem2 = Item()
-        newItem2.title = "feed rey-rey"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "finish ios course"
-        itemArray.append(newItem3)
-        
-        // this goes into the the defaults object and pulls out what is in local storage if there are items and uses that on page load.
-//        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
-//            itemArray = items
-//        }
+        loadItems()
     }
 
     
@@ -128,6 +121,17 @@ class TodoListViewController: UITableViewController {
         
         // reloads the table view once a new todo task has been added to my array
         tableView.reloadData()
+    }
+    
+    func loadItems(){
+        if let data = try? Data(contentsOf: dataFilePath!){
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error encoding item array, \(error)")
+            }
+        }
     }
 }
 
