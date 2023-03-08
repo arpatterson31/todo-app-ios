@@ -11,8 +11,8 @@ class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    // interface to the user's defaults database - key value pairs stored persistently across launches of the app
-    let defaults = UserDefaults.standard
+    // creates a file path to the documents folder
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +22,10 @@ class TodoListViewController: UITableViewController {
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
+        
+       
+        
+//        print(dataFilePath)
         
         // refactor after creating an Item class - previous todos were stored in an array
         let newItem = Item()
@@ -37,7 +41,7 @@ class TodoListViewController: UITableViewController {
         itemArray.append(newItem3)
         
         // this goes into the the defaults object and pulls out what is in local storage if there are items and uses that on page load.
-//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+//        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
 //            itemArray = items
 //        }
     }
@@ -95,8 +99,14 @@ class TodoListViewController: UITableViewController {
             newItem.title = textField.text!
             self.itemArray.append(newItem)
             
-            // adds to the defaults object, much like local storage
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            // encoder
+            let encoder = PropertyListEncoder()
+            do {
+                let data = try encoder.encode(self.itemArray)
+                try data.write(to: self.dataFilePath!)
+            } catch {
+                print("Error encoding item array, \(error)")
+            }
             
             // reloads the table view once a new todo task has been added to my array
             self.tableView.reloadData()
