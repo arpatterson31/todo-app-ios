@@ -73,8 +73,7 @@ class TodoListViewController: UITableViewController {
                 
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        // reloads the table to get the checkmarks back
-        tableView.reloadData()
+        saveItems()
         
         // highlight the one selected in grey and then removes that highlight
         tableView.deselectRow(at: indexPath, animated: true)
@@ -99,17 +98,8 @@ class TodoListViewController: UITableViewController {
             newItem.title = textField.text!
             self.itemArray.append(newItem)
             
-            // encoder
-            let encoder = PropertyListEncoder()
-            do {
-                let data = try encoder.encode(self.itemArray)
-                try data.write(to: self.dataFilePath!)
-            } catch {
-                print("Error encoding item array, \(error)")
-            }
-            
-            // reloads the table view once a new todo task has been added to my array
-            self.tableView.reloadData()
+            // saves items and encodes it and stores to the data file path
+            self.saveItems()
         }
         
         
@@ -124,6 +114,20 @@ class TodoListViewController: UITableViewController {
         alert.addAction(action)
         // presents it modally
         present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK - Model Manipulation Methods
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error encoding item array, \(error)")
+        }
+        
+        // reloads the table view once a new todo task has been added to my array
+        tableView.reloadData()
     }
 }
 
