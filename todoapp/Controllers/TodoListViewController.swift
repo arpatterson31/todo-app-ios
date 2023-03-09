@@ -19,7 +19,7 @@ class TodoListViewController: UITableViewController {
         super.viewDidLoad()
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor.darkGray
+        appearance.backgroundColor = UIColor.systemPink
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
