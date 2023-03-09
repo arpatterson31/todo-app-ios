@@ -25,7 +25,7 @@ class TodoListViewController: UITableViewController {
         navigationItem.scrollEdgeAppearance = appearance
         
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-               
+       
         loadItems()
     }
 
@@ -53,7 +53,15 @@ class TodoListViewController: UITableViewController {
     
     //MARK - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-                
+        
+//        method to update object
+//        itemArray[indexPath.row].setValue(value, forKey: key)
+        
+//        removes from the db - order matters!! delete with context first then delete from our array
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
+
+        
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         saveItems()
@@ -115,13 +123,47 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems(){
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+    // default parameter which allows us to load items when the app first loads up
+    // also has an external and internal parameter
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()){
         do {
             itemArray = try context.fetch(request)
         } catch {
             print("Error fetching data from context \(error)")
         }
+        
+        tableView.reloadData()
     }
+    
+    
+}
+
+//MARK: - Search bar methods
+
+extension TodoListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+//        querying using core data - objective-c code being used %@ searchbar.text will be put into that holder
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+
+        loadItems(with: request)
+
+    }
+    // func that will go back to the original list once user hits the X or backs out of the search bar
+    // func uses the dispatch queue to remove the cursor blink and the keyboard once i am done searching
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+    }
+    
 }
 
