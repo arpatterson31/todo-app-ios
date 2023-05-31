@@ -14,6 +14,9 @@ class TodoListViewController: SwipeTableViewController {
     var todoItems: Results<Item>?
     let realm = try! Realm()
     
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     var selectedCategory : Category? {
         didSet {
             loadItems()
@@ -22,16 +25,37 @@ class TodoListViewController: SwipeTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor.systemPink
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationItem.standardAppearance = appearance
-        navigationItem.scrollEdgeAppearance = appearance
+//        let appearance = UINavigationBarAppearance()
+//        appearance.configureWithTransparentBackground()
+////        appearance.backgroundColor = UIColor.systemPink
+////        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+//        navigationItem.standardAppearance = appearance
+//        navigationItem.scrollEdgeAppearance = appearance
+        
+        
+        
         
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         tableView.separatorStyle = .none
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let colorHex = selectedCategory?.color {
+            
+            title = selectedCategory!.name
+            
+            guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist.")}
+            
+            if let navBarColor = UIColor(hexString: colorHex) {
+                navBar.backgroundColor = navBarColor
+                navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true)]
+                searchBar.barTintColor = navBarColor
+            }
+            
+            
+        }
     }
 
     

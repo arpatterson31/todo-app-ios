@@ -19,18 +19,27 @@ class CategoryViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor.systemPink
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationItem.standardAppearance = appearance
-        navigationItem.scrollEdgeAppearance = appearance
+//        let appearance = UINavigationBarAppearance()
+//        appearance.configureWithTransparentBackground()
+////        appearance.backgroundColor = UIColor.systemPink
+//        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+//        navigationItem.standardAppearance = appearance
+//        navigationItem.scrollEdgeAppearance = appearance
         
         loadCategories()
         
         tableView.separatorStyle = .none
                 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navBar = navigationController?.navigationBar else {
+            fatalError("Navigation controller does not exist")
+        }
+        
+        navBar.backgroundColor = UIColor(hexString: "1D9BF6")
+    }
+    
     //MARK:  - TableView DataSource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -38,12 +47,19 @@ class CategoryViewController: SwipeTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let category = categoryArray?[indexPath.row]
+        
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        cell.textLabel?.text = category?.name ?? "No Categories Added Yet"
-        cell.backgroundColor = UIColor(hexString: category?.color ?? UIColor.randomFlat().hexValue())
+        if let category = categoryArray?[indexPath.row] {
+            guard let categoryColor = UIColor(hexString: category.color) else {fatalError("error")}
+            
+            cell.textLabel?.text = category.name
+            cell.backgroundColor = categoryColor
+            cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
+        }
+        
+       
       
      
         return cell
