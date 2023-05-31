@@ -16,6 +16,7 @@
 		224BB35529B7D72900F69BB2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 224BB35329B7D72900F69BB2 /* LaunchScreen.storyboard */; };
 		224BB38B29BA6EC100F69BB2 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224BB38A29BA6EC100F69BB2 /* CategoryViewController.swift */; };
 		22A7E7592A26B1920043A7AA /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A7E7582A26B1920043A7AA /* SwipeTableViewController.swift */; };
+		22A7E75C2A26C0340043A7AA /* Chameleon in Frameworks */ = {isa = PBXBuildFile; productRef = 22A7E75B2A26C0340043A7AA /* Chameleon */; };
 		22E8CEDD29BAAEA500A821DF /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E8CEDC29BAAEA500A821DF /* Item.swift */; };
 		22E8CEDF29BAAEAE00A821DF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E8CEDE29BAAEAE00A821DF /* Category.swift */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				160B86F56FD5A430D3EA000A /* Pods_todoapp.framework in Frameworks */,
+				22A7E75C2A26C0340043A7AA /* Chameleon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +155,9 @@
 			dependencies = (
 			);
 			name = todoapp;
+			packageProductDependencies = (
+				22A7E75B2A26C0340043A7AA /* Chameleon */,
+			);
 			productName = todoapp;
 			productReference = 224BB34529B7D72800F69BB2 /* todoapp.app */;
 			productType = "com.apple.product-type.application";
@@ -181,6 +186,9 @@
 				Base,
 			);
 			mainGroup = 224BB33C29B7D72800F69BB2;
+			packageReferences = (
+				22A7E75A2A26C0340043A7AA /* XCRemoteSwiftPackageReference "ChameleonFramework" */,
+			);
 			productRefGroup = 224BB34629B7D72800F69BB2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -476,6 +484,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		22A7E75A2A26C0340043A7AA /* XCRemoteSwiftPackageReference "ChameleonFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/starkdmi/ChameleonFramework.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		22A7E75B2A26C0340043A7AA /* Chameleon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22A7E75A2A26C0340043A7AA /* XCRemoteSwiftPackageReference "ChameleonFramework" */;
+			productName = Chameleon;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 224BB33D29B7D72800F69BB2 /* Project object */;
 }
